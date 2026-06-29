@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital MOS Assignment — Mission to Monetize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B0B0D;
+    --panel:#15151A;
+    --panel-2:#1C1B22;
+    --rose:#B76E79;
+    --rose-lt:#C9818A;
+    --champagne:#EDE7E3;
+    --dim:#8A8590;
+    --line:#2A2730;
+    --gold:#D9A87E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--ink);
+    color:var(--champagne);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.55;
+    min-height:100vh;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:clamp(16px,4vw,48px) clamp(14px,4vw,24px);
+    background-image:
+      radial-gradient(900px 500px at 80% -10%, rgba(183,110,121,.10), transparent 60%),
+      radial-gradient(700px 500px at -10% 110%, rgba(217,168,126,.06), transparent 55%);
+  }
+  .stage{width:100%;max-width:660px}
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--rose-lt);
+  }
+  .rule{height:1px;background:var(--line);border:0;margin:18px 0}
+  .card{
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:clamp(22px,5vw,40px);
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    border-top:2px solid var(--rose);
+    border-image:linear-gradient(90deg,var(--rose),var(--gold)) 1;
+  }
+  .insignia{
+    font-family:'Oswald',sans-serif;
+    font-weight:600;
+    font-size:clamp(34px,8vw,52px);
+    line-height:1.02;
+    text-transform:uppercase;
+    letter-spacing:.01em;
+    margin:14px 0 6px;
+  }
+  .insignia span{color:var(--rose)}
+  .lede{color:var(--dim);font-size:15px;max-width:46ch;margin:10px 0 4px}
+  .meta-row{
+    display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 28px;
+  }
+  .chip{
+    font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;
+    color:var(--champagne);border:1px solid var(--line);border-radius:2px;
+    padding:7px 11px;text-transform:uppercase;
+  }
+  .chip b{color:var(--rose-lt);font-weight:700}
+  .btn{
+    appearance:none;cursor:pointer;
+    font-family:'Oswald',sans-serif;font-weight:600;
+    text-transform:uppercase;letter-spacing:.14em;font-size:15px;
+    color:var(--ink);background:var(--rose);
+    border:0;border-radius:3px;padding:15px 26px;
+    transition:transform .12s ease, background .2s ease;
+    width:100%;
+  }
+  .btn:hover{background:var(--rose-lt)}
+  .btn:active{transform:translateY(1px)}
+  .btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .btn.ghost{
+    background:transparent;color:var(--rose-lt);
+    border:1px solid var(--line);
+  }
+  .btn.ghost:hover{border-color:var(--rose);color:var(--champagne)}
+  .progress-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+  .progress-track{height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin-bottom:30px}
+  .progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));transition:width .4s ease}
+  .q-text{
+    font-family:'Oswald',sans-serif;font-weight:500;
+    font-size:clamp(22px,5vw,30px);line-height:1.15;
+    text-transform:uppercase;margin-bottom:24px;letter-spacing:.005em;
+  }
+  .options{display:flex;flex-direction:column;gap:11px}
+  .opt{
+    text-align:left;cursor:pointer;
+    background:var(--panel-2);border:1px solid var(--line);border-radius:3px;
+    padding:16px 18px;color:var(--champagne);font-size:15.5px;font-family:'Inter',sans-serif;
+    display:flex;gap:14px;align-items:flex-start;
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .opt .tick{
+    font-family:'Space Mono',monospace;font-size:12px;color:var(--rose-lt);
+    border:1px solid var(--line);border-radius:2px;
+    min-width:26px;height:26px;display:grid;place-items:center;flex-shrink:0;margin-top:1px;
+  }
+  .opt:hover{border-color:var(--rose);background:#211f27}
+  .opt:hover .tick{border-color:var(--rose);color:var(--ink);background:var(--rose)}
+  .opt:active{transform:translateY(1px)}
+  .opt:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:24px}
+  .back{
+    background:none;border:0;cursor:pointer;color:var(--dim);
+    font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+    padding:8px 4px;
+  }
+  .back:hover{color:var(--rose-lt)}
+  .back:disabled{opacity:0;pointer-events:none}
+  .back:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:2px}
+  .orders-stamp{
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--dim);margin-bottom:18px;
+  }
+  .orders-stamp .cls{color:var(--rose-lt);border:1px solid var(--rose);padding:4px 8px;border-radius:2px}
+  .division-name{
+    font-family:'Oswald',sans-serif;font-weight:700;
+    font-size:clamp(30px,7.5vw,46px);line-height:1;text-transform:uppercase;
+    margin:6px 0 4px;
+  }
+  .division-name .d{color:var(--rose)}
+  .division-tag{font-family:'Space Mono',monospace;font-size:12px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:18px}
+  .division-blurb{color:var(--champagne);font-size:15.5px;margin-bottom:6px}
+  .roster-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin:26px 0 14px}
+  .mos{
+    border:1px solid var(--line);border-left:2px solid var(--rose);
+    border-radius:3px;padding:15px 17px;margin-bottom:11px;background:var(--panel-2);
+  }
+  .mos h4{
+    font-family:'Oswald',sans-serif;font-weight:600;font-size:18px;text-transform:uppercase;
+    letter-spacing:.01em;color:var(--champagne);margin-bottom:4px;
+  }
+  .mos p{color:var(--dim);font-size:14px;margin-bottom:10px}
+  .mos .stats{display:flex;flex-wrap:wrap;gap:8px}
+  .mos .stat{
+    font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.04em;
+    color:var(--champagne);border:1px solid var(--line);border-radius:2px;padding:5px 8px;
+  }
+  .mos .stat b{color:var(--rose-lt)}
+  .cta-box{
+    margin-top:26px;padding:20px;border:1px dashed var(--line);border-radius:3px;
+    background:rgba(183,110,121,.05);
+  }
+  .cta-box p{font-size:14.5px;color:var(--champagne);margin-bottom:14px}
+  .cta-box .small{font-size:12px;color:var(--dim);margin-top:12px;margin-bottom:0}
+  .restart-row{margin-top:20px}
+  .footer{
+    text-align:center;margin-top:26px;
+    font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--dim);
+  }
+  .footer b{color:var(--rose-lt)}
+  .hide{display:none !important}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .anim{ animation:rise .5s ease }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div id="intro" class="card">
+    <div class="eyebrow">Military Skills. Digital Success.</div>
+    <h1 class="insignia"><span>Digital</span> MOS</h1>
+    <p class="lede">Discover the online career path that matches your strengths, personality, and experience.</p>
+    <div class="meta-row">
+      <span class="chip">Time: <b>2 min</b></span>
+      <span class="chip">Questions: <b>8</b></span>
+    </div>
+    <button id="startBtn" class="btn">Take the Assignment</button>
+    <div class="footer">
+      Mission to Monetize <b>·</b> The Lady Di Vibe
+    </div>
+  </div>
+
+  <div id="quiz" class="card hide">
+    <div class="progress-head">
+      <span class="eyebrow"><span id="qCounter">Question 01 / 08</span></span>
+      <span class="eyebrow"><span id="qPct">0%</span></span>
+    </div>
+    <div class="progress-track">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+    <h2 id="qText" class="q-text"></h2>
+    <div id="options" class="options"></div>
+    <div class="nav-row">
+      <button id="backBtn" class="back">← Back</button>
+    </div>
+  </div>
+
+  <div id="result" class="card hide">
+    <div class="orders-stamp">
+      <span class="eyebrow">Your Assignment</span>
+      <span class="cls">MISSION READY</span>
+    </div>
+    <h2 id="resName" class="division-name"></h2>
+    <p id="resTag" class="division-tag"></p>
+    <p id="resBlurb" class="division-blurb"></p>
+
+    <div class="roster-label">Your MOS Roster</div>
+    <div id="roster"></div>
+
+    <div class="cta-box">
+      <p id="ctaText"></p>
+      <button id="skoolBtn" class="btn">Join Mission to Monetize</button>
+    </div>
+
+    <div class="restart-row">
+      <button id="restartBtn" class="btn ghost">← Take Again</button>
+    </div>
+
+    <div class="footer">
+      Diana Ocasio <b>·</b> The Lady Di Vibe
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "What pulls at you most?",
+    options: [
+      { t: "Being someone's reliable right hand", w:{A:2} },
+      { t: "Building a shop full of things people buy on repeat", w:{B:2} },
+      { t: "Growing an audience by sharing what I know", w:{C:2} },
+      { t: "From several places at once", w:{D:2} },
+    ]
+  },
+  {
+    q: "Where do you want to be?",
+    options: [
+      { t: "On camera — I've got presence", w:{A:1,C:1} },
+      { t: "Behind the scenes, faceless is just fine", w:{C:2,B:1} },
+      { t: "A mix, depending on the day", w:{A:1,B:1} },
+      { t: "Camera-shy — let my work speak for me", w:{B:2} },
+    ]
+  },
+  {
+    q: "When do you need that first dollar?",
+    options: [
+      { t: "In the next month or two — I move fast", w:{A:2} },
+      { t: "I can build slow now for a bigger payoff later", w:{C:2} },
+      { t: "Steady growth over a few months works", w:{B:2} },
+      { t: "I'm already past the starting line, ready to scale", w:{D:3} },
+    ]
+  },
+  {
+    q: "What's your real superpower?",
+    options: [
+      { t: "Making people feel heard and helped", w:{A:2} },
+      { t: "Turning ideas into sellable products", w:{B:2} },
+      { t: "Teaching and explaining things simply", w:{C:2} },
+      { t: "Seeing the big picture and connecting it all", w:{D:2} },
+    ]
+  },
+  {
+    q: "The money part — you want it…",
+    options: [
+      { t: "Monthly retainers from people who trust me", w:{A:2} },
+      { t: "Passive and compounding from products", w:{B:2} },
+      { t: "From a platform and audience I own", w:{C:2} },
+      { t: "From several places at once", w:{D:2} },
+    ]
+  },
+  {
+    q: "Your dream setup looks like…",
+    options: [
+      { t: "A roster of clients who count on me", w:{A:2} },
+      { t: "A storefront that sells while I sleep", w:{B:2} },
+      { t: "A platform and an audience that keeps growing", w:{C:2} },
+      { t: "A full ecosystem I run like an operation", w:{D:2} },
+    ]
+  },
+  {
+    q: "Where are you right now?",
+    options: [
+      { t: "Total beginner — starting fresh", w:{A:1} },
+      { t: "Dabbled and made a little money", w:{B:1,C:1} },
+      { t: "Making consistent sales, want more streams", w:{D:4} },
+      { t: "Still exploring what fits me", w:{} },
+    ]
+  },
+  {
+    q: "Pick the one that gets you excited",
+    options: [
+      { t: "Helping people one-on-one (coaching, VA, content)", w:{A:2} },
+      { t: "Designing and selling my own creations", w:{B:2} },
+      { t: "Building an audience and profiting from reach", w:{C:2} },
+      { t: "Running multiple revenue streams as one machine", w:{D:3} },
+    ]
+  },
+];
+
+const DIVISIONS = {
+  A: {
+    name: "Alpha Division",
+    tag: "Service-Based Income",
+    blurb: "You're wired to be the dependable one. You turn skill, structure and follow-through into income — and clients pay well for someone they can trust.",
+    cta: "Alpha runs on landing your first clients. Inside Mission to Monetize, the Service track walks you through packages, contracts, discovery calls and onboarding.",
+    roster: [
+      { name:"Virtual Assistant Operations Specialist", desc:"Run admin, scheduling, inbox, social and operations for businesses.", time:"30–60 days", income:"$500–$5,000+/mo" },
+      { name:"Social Media Operations Specialist", desc:"Own content, engagement, strategy and growth for clients on retainer.", time:"30–90 days", income:"$1,000–$10,000+/mo" },
+      { name:"UGC Content Creator", desc:"Make content for brands — no influencer following required.", time:"30–90 days", income:"$500–$10,000+/mo" },
+    ]
+  },
+  B: {
+    name: "Bravo Division",
+    tag: "Product-Based Income",
+    blurb: "You'd rather build it once and sell it again and again. Your creative eye plus a storefront equals income that doesn't depend on you showing up every single day.",
+    cta: "Bravo is built on products that sell on repeat. The Product track covers niche research, design, listings, SEO and delivery systems.",
+    roster: [
+      { name:"Etsy Entrepreneur", desc:"Open a digital or handmade store buyers can find and love.", time:"30–90 days", income:"Scalable" },
+      { name:"Print on Demand Operator", desc:"Sell designs on products with zero inventory to hold.", time:"30–120 days", income:"Unlimited" },
+      { name:"Digital Product Creator", desc:"Turn what you know into templates, workbooks, planners and courses.", time:"30–90 days", income:"High scalability" },
+      { name:"Amazon KDP Publisher", desc:"Publish journals, planners and low-content books for passive income.", time:"30–90 days", income:"Passive-focused" },
+    ]
+  },
+  C: {
+    name: "Charlie Division",
+    tag: "Content-Based Income",
+    blurb: "You play the long game and win it. You build audiences, drive traffic and let content work for you — money that compounds while you sleep.",
+    cta: "Charlie compounds over time. The Content track covers affiliate programs, traffic systems, SEO and conversion so your reach turns into revenue.",
+    roster: [
+      { name:"Affiliate Marketing Specialist", desc:"Recommend products you believe in and earn on every sale.", time:"30–120 days", income:"Scalable" },
+      { name:"Faceless Content Operator", desc:"Build channels and grow an audience without ever showing your face.", time:"60–180 days", income:"High" },
+      { name:"Pinterest Traffic Specialist", desc:"Drive free, lasting traffic to products, blogs and offers.", time:"60–180 days", income:"High" },
+    ]
+  },
+  D: {
+    name: "Delta Division",
+    tag: "Digital Income Strategist",
+    blurb: "You're not starting from zero — you're ready to combine. Affiliate, products, coaching, UGC, POD and social management woven into one ecosystem. This is the MOS Diana operates in, and your final advancement path.",
+    cta: "Delta is the command level. You'll connect your streams into one system instead of running them as scattered side hustles — the strategist's path inside Mission to Monetize.",
+    roster: [
+      { name:"Digital Income Strategist", desc:"Combine multiple proven streams into one connected ecosystem you run like an operation.", time:"You're already moving", income:"Multi-stream" },
+      { name:"Streams You'll Orchestrate", desc:"Affiliate · Digital Products · Coaching · UGC · Etsy · POD · Social Media Management.", time:"Built on what works", income:"Compounding" },
+    ]
+  },
+};
+
+const els = {
+  intro: document.getElementById('intro'),
+  quiz: document.getElementById('quiz'),
+  result: document.getElementById('result'),
+  startBtn: document.getElementById('startBtn'),
+  restartBtn: document.getElementById('restartBtn'),
+  backBtn: document.getElementById('backBtn'),
+  qCounter: document.getElementById('qCounter'),
+  qPct: document.getElementById('qPct'),
+  fill: document.getElementById('progressFill'),
+  qText: document.getElementById('qText'),
+  options: document.getElementById('options'),
+};
+
+let current = 0;
+let answers = [];
+
+function show(el){ el.classList.remove('hide'); el.classList.remove('anim'); void el.offsetWidth; el.classList.add('anim'); }
+function hide(el){ el.classList.add('hide'); }
+function pad(n){ return String(n).padStart(2,'0'); }
+
+function renderQuestion(){
+  const Q = QUESTIONS[current];
+  const total = QUESTIONS.length;
+  els.qCounter.textContent = `Question ${pad(current+1)} / ${pad(total)}`;
+  const pct = Math.round((current/total)*100);
+  els.qPct.textContent = pct + '%';
+  els.fill.style.width = (current/total)*100 + '%';
+  els.qText.textContent = Q.q;
+  els.backBtn.disabled = current === 0;
+
+  els.options.innerHTML = '';
+  Q.options.forEach((opt, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = `<span class="tick">${String.fromCharCode(65+i)}</span><span>${opt.t}</span>`;
+    b.addEventListener('click', () => choose(i));
+    els.options.appendChild(b);
+  });
+
+  els.qText.classList.remove('anim'); void els.qText.offsetWidth; els.qText.classList.add('anim');
+  els.options.classList.remove('anim'); void els.options.offsetWidth; els.options.classList.add('anim');
+}
+
+function choose(i){
+  answers[current] = i;
+  if(current < QUESTIONS.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    els.fill.style.width = '100%';
+    showResult();
+  }
+}
+
+function goBack(){
+  if(current > 0){ current--; renderQuestion(); }
+}
+
+function tally(){
+  const score = {A:0,B:0,C:0,D:0};
+  answers.forEach((choiceIdx, qi) => {
+    const w = QUESTIONS[qi].options[choiceIdx].w || {};
+    for(const k in w){ score[k] += w[k]; }
+  });
+  const order = ['D','A','B','C'];
+  let best = 'A', bestVal = -1;
+  for(const k of order){
+    if(score[k] > bestVal){ bestVal = score[k]; best = k; }
+  }
+  return best;
+}
+
+function showResult(){
+  const key = tally();
+  const D = DIVISIONS[key];
+  document.getElementById('resName').innerHTML = D.name.replace(/^(\w+)/, '<span class="d">$1</span>');
+  document.getElementById('resTag').textContent = '// ' + D.tag;
+  document.getElementById('resBlurb').textContent = D.blurb;
+  document.getElementById('ctaText').textContent = D.cta;
+
+  const roster = document.getElementById('roster');
+  roster.innerHTML = '';
+  D.roster.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'mos';
+    div.innerHTML = `
+      <h4>${m.name}</h4>
+      <p>${m.desc}</p>
+      <div class="stats">
+        <span class="stat">First $ · <b>${m.time}</b></span>
+        <span class="stat">Income · <b>${m.income}</b></span>
+      </div>`;
+    roster.appendChild(div);
+  });
+
+  hide(els.quiz);
+  show(els.result);
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  document.getElementById('skoolBtn').addEventListener('click', () => {
+    window.location.href = 'https://www.skool.com/the-lady-di-lifework-lab-1478/about';
+  });
+}
+
+function start(){
+  current = 0; answers = [];
+  hide(els.intro); hide(els.result);
+  show(els.quiz);
+  renderQuestion();
+}
+
+els.startBtn.addEventListener('click', start);
+els.restartBtn.addEventListener('click', () => { hide(els.result); show(els.intro); window.scrollTo({top:0,behavior:'smooth'}); });
+els.backBtn.addEventListener('click', goBack);
+</script>
+</body>
+</html>
