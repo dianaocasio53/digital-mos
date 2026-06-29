@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital MOS Quiz</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      min-height: 100vh; 
+      padding: 20px;
+      color: #333;
+    }
+    .container { 
+      max-width: 800px; 
+      margin: 0 auto; 
+      background: white; 
+      padding: 50px 40px;
+      border-radius: 10px; 
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    h1 { 
+      color: #1F4E78;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .subtitle { 
+      color: #666; 
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+    .progress-bar {
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #B76E79;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .question-section { 
+      margin-bottom: 40px;
+    }
+    .question-number {
+      color: #B76E79;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .question-text { 
+      font-size: 18px;
+      font-weight: bold;
+      color: #1F4E78;
+      margin-bottom: 20px;
+    }
+    .options { 
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: white;
+    }
+    .option:hover {
+      border-color: #B76E79;
+      background: #faf9f9;
+    }
+    .option input[type="radio"] {
+      margin-right: 14px;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+    }
+    .option label {
+      cursor: pointer;
+      flex: 1;
+      font-size: 15px;
+    }
+    .button-group { 
+      display: flex; 
+      gap: 15px; 
+      margin-top: 40px;
+      justify-content: center;
+    }
+    button { 
+      padding: 12px 32px; 
+      font-size: 16px; 
+      border: none; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+    .submit-btn { 
+      background: #B76E79;
+      color: white; 
+      min-width: 200px;
+    }
+    .submit-btn:hover:not(:disabled) { 
+      background: #A05A63;
+      transform: translateY(-2px);
+    }
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .result-box { 
+      background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
+      padding: 30px; 
+      border-left: 5px solid #B76E79;
+      border-radius: 6px;
+      margin-top: 30px;
+      text-align: center;
+    }
+    .result-title { 
+      font-size: 28px;
+      font-weight: bold;
+      color: #1F4E78;
+      margin-bottom: 15px;
+    }
+    .result-subtitle {
+      font-size: 18px;
+      color: #B76E79;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .result-text { 
+      color: #555;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+    .hidden { display: none; }
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Digital MOS Quiz</h1>
+      <p class="subtitle">Discover Your Military Business Archetype</p>
+    </div>
+
+    <div id="quiz" class="">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+
+      <form id="quiz-form">
+        <div id="questions-container"></div>
+
+        <div class="button-group">
+          <button type="submit" class="submit-btn" id="submitBtn">Get My Results</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="results" class="result-box hidden">
+      <div class="result-title" id="divisionName"></div>
+      <div class="result-subtitle" id="archetypeName"></div>
+      <div class="result-text" id="archetypeDesc"></div>
+      <p style="margin-top: 25px; font-size: 14px; color: #999;">Redirecting to Mission to Monetize in 3 seconds...</p>
+    </div>
+  </div>
+
+  <script>
+    const QUESTIONS = [
+      {
+        q: "What pulls at you most?",
+        options: [
+          { t: "Being someone's reliable right hand", w: { A: 2 } },
+          { t: "Building a shop full of things people buy on repeat", w: { B: 2 } },
+          { t: "Growing an audience by sharing what I know", w: { C: 2 } },
+          { t: "Stacking a few income streams into one machine", w: { D: 3 } },
+        ]
+      },
+      {
+        q: "Where do you want to be?",
+        options: [
+          { t: "On camera — I've got presence", w: { A: 1, C: 1 } },
+          { t: "Behind the scenes, faceless is just fine", w: { C: 2, B: 1 } },
+          { t: "A mix, depending on the day", w: { A: 1, B: 1 } },
+          { t: "Camera-shy — let my work speak for me", w: { B: 2 } },
+        ]
+      },
+      {
+        q: "When do you need that first dollar?",
+        options: [
+          { t: "In the next month or two — I move fast", w: { A: 2 } },
+          { t: "I can build slow now for a bigger payoff later", w: { C: 2 } },
+          { t: "Steady growth over a few months works", w: { B: 2 } },
+          { t: "I'm already past the starting line, ready to scale", w: { D: 3 } },
+        ]
+      },
+      {
+        q: "What's your real superpower?",
+        options: [
+          { t: "Making people feel heard and helped", w: { A: 2 } },
+          { t: "Turning ideas into sellable products", w: { B: 3 } },
+          { t: "Teaching and explaining complex things simply", w: { C: 2 } },
+          { t: "Seeing patterns and connecting the dots", w: { D: 3 } },
+        ]
+      },
+      {
+        q: "If you could describe your business vibe, what is it?",
+        options: [
+          { t: "Service-based income (I trade time for money, but strategically)", w: { A: 2 } },
+          { t: "Product-based income (I build once, sell many times)", w: { B: 2 } },
+          { t: "Content-based income (I build an audience first)", w: { C: 2 } },
+          { t: "Multiple income streams working together", w: { D: 3 } },
+        ]
+      }
+    ];
+
+    const RESULTS = {
+      A: {
+        division: "ALPHA DIVISION",
+        archetype: "Operator",
+        desc: "You're the reliable force that gets things done. Your strength is execution, presence, and making people feel supported. Your path: Build a service-based income stream, then systematize it to scale. Mission to Monetize will show you how to turn your service excellence into sustainable revenue without burning out."
+      },
+      B: {
+        division: "BRAVO DIVISION",
+        archetype: "Builder",
+        desc: "You excel at creating and building things that solve real problems. Your superpower is turning ideas into products people want. Your path: Develop your product, nail your launch, then scale it. Mission to Monetize will teach you product strategy, pricing, and how to build a business that doesn't depend on your time."
+      },
+      C: {
+        division: "CHARLIE DIVISION",
+        archetype: "Marketer",
+        desc: "You're a natural communicator and content creator. Your gift is building audiences and influence through what you share. Your path: Build your audience first, then monetize through courses, coaching, or partnerships. Mission to Monetize will show you how to turn followers into revenue streams."
+      },
+      D: {
+        division: "DELTA DIVISION",
+        archetype: "Creator",
+        desc: "You think differently and see possibilities others miss. Your strength is innovation and connecting multiple income streams into one machine. Your path: Build multiple revenue streams that work together synergistically. Mission to Monetize will teach you how to orchestrate a portfolio business that generates wealth from multiple angles."
+      }
+    };
+
+    let currentQuestion = 0;
+    const answers = { A: 0, B: 0, C: 0, D: 0 };
+
+    function renderQuestions() {
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      QUESTIONS.forEach((q, idx) => {
+        const div = document.createElement('div');
+        div.className = 'question-section';
+        div.innerHTML = `
+          <div class="question-number">Question ${idx + 1} of ${QUESTIONS.length}</div>
+          <div class="question-text">${q.q}</div>
+          <div class="options">
+            ${q.options.map((opt, optIdx) => `
+              <div class="option">
+                <input type="radio" id="q${idx}o${optIdx}" name="q${idx}" value="${optIdx}" required>
+                <label for="q${idx}o${optIdx}">${opt.t}</label>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function updateProgress() {
+      const answered = QUESTIONS.filter((_, idx) => {
+        return document.querySelector(`input[name="q${idx}"]:checked`);
+      }).length;
+      const progress = (answered / QUESTIONS.length) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+    }
+
+    document.getElementById('quiz-form').addEventListener('change', updateProgress);
+
+    document.getElementById('quiz-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Score answers
+      QUESTIONS.forEach((q, qIdx) => {
+        const selected = document.querySelector(`input[name="q${qIdx}"]:checked`);
+        if (selected) {
+          const optIdx = parseInt(selected.value);
+          const weights = q.options[optIdx].w;
+          for (const [division, points] of Object.entries(weights)) {
+            answers[division] += points;
+          }
+        }
+      });
+
+      // Find winner
+      const winner = Object.keys(answers).reduce((a, b) => answers[a] > answers[b] ? a : b);
+      const result = RESULTS[winner];
+
+      // Show results
+      document.getElementById('quiz').classList.add('hidden');
+      document.getElementById('divisionName').textContent = result.division;
+      document.getElementById('archetypeName').textContent = result.archetype;
+      document.getElementById('archetypeDesc').textContent = result.desc;
+      document.getElementById('results').classList.remove('hidden');
+
+      // Send webhook
+      const email = new URLSearchParams(window.location.search).get('email') || 'quiz@example.com';
+      const payload = {
+        email: email,
+        firstName: email.split('@')[0],
+        division: winner,
+        divisionName: result.division,
+        archetype: result.archetype,
+        timestamp: new Date().toISOString()
+      };
+
+      fetch('https://hook.us2.make.com/k9mc3xvqbsgch0x1wh8aqh640n2lrrbo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(e => console.log('Webhook sent'));
+
+      // Redirect
+      setTimeout(() => {
+        window.location.href = 'https://www.skool.com/the-lady-di-lifework-lab-1478/about';
+      }, 3000);
+    });
+
+    // Initialize
+    renderQuestions();
+  </script>
+</body>
+</html>
